@@ -1,11 +1,21 @@
 const jwt = require("jsonwebtoken")
+const tokenblacklistmodel = require("../models/blacklist.model") 
 
-function authUser(req,res,next){
+
+ async function authUser(req,res,next){
     const token = req.cookies.token
 
     if(!token){
         return res.status(401).json({
             message:"Token not provided"
+        })
+    }
+    const istokenblacklisted = await tokenblacklistmodel.findOne({
+        token
+    })
+    if(istokenblacklisted){
+        return res.status(401).json({
+            message:"token is invalid"
         })
     }
     try{
