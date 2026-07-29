@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "./features/auth/pages/login";
 import Register from "./features/auth/pages/register";
+import Protected from "./features/auth/components/protected";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,6 @@ export const router = createBrowserRouter([
     element: <Register />,
   },{
     path:'/',
-    element:<h1>Homepage</h1>
+    element:<Protected><h1>Homepage</h1></Protected>
   }
 ]);
