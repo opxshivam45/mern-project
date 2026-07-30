@@ -37,7 +37,7 @@ const TechnicalQuestionsSchema = new mongoose.Schema({
         type:String,
         required:[true,"Technical question is required"]
     },
-    intension:{
+    intention:{
         type:String,
         required:[true,"internsion is required"]
     },
@@ -54,7 +54,7 @@ const BehaviouralQuestionsSchema = new mongoose.Schema({
         type:String,
         required:[true,"Technical question is required"]
     },
-    intension:{
+    intention:{
         type:String,
         required:[true,"internsion is required"]
     },
@@ -67,11 +67,11 @@ const BehaviouralQuestionsSchema = new mongoose.Schema({
 })
 
 const SkillGapsSchema = new mongoose.Schema({
-    skills:{
-        typoe:String,
+    skill:{
+        type:String,
         required:[true,"skills is required"]
     },
-    sevrity:{
+    severity:{
         type:String,
         enum:["low","medium","high"],
         required:[true,"Severity is required"]
@@ -104,15 +104,19 @@ const interviewReportSchema = new mongoose.Schema({
     resume:{
         type:String,
     },
-    matchscore:{
+    matchScore:{
         type:Number,
         min:0,
         max:100,
     },
-    TechnicalQuestions:[TechnicalQuestionsSchema],
-    BehaviouralQuestions:[BehaviouralQuestionsSchema],
-    SkillGaps:[SkillGapsSchema],
-    prepartionPlan:[preparationPlanSchema]
+    technicalQuestions:[TechnicalQuestionsSchema],
+    behavioralQuestions:[BehaviouralQuestionsSchema],
+    skillGaps:[SkillGapsSchema],
+    preparationPlan:[preparationPlanSchema],
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"users"
+    }
 },{
     timestamps:true
 })
