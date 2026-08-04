@@ -147,10 +147,34 @@
 
 // export default Home
 
-import React from 'react'
+import React,{useState,useRef} from 'react'
 import "../style/home.scss"
+import { useInterview } from '../hooks/useInterview'
+import { useNavigate } from 'react-router'
 
 const Home = () => {
+
+    const {loading,generateReport} = useInterview()
+    const [jobDescription,setJobDescription] = useState("")
+    const [selfDescription,setSelfDescription] = useState("")   
+    const resumeInputRef = useRef(null)
+
+    const navigate = useNavigate()
+
+    const handleGenerateReport = async () => {
+        const resumeFile = resumeInputRef.current.files[0]
+        await generateReport({jobDescription,selfDescription,resumeFile})
+        navigate("/interview/$`{data._id} ")
+    }    
+
+    if(loading){
+        return (
+            <main className='loading-screen'>
+                <h1>Generating Your Interview Report...</h1>
+            </main>
+        )
+    }
+
     return (
         <main className='home'>
             <div className="home-header">
@@ -176,6 +200,7 @@ const Home = () => {
                         </div>
 
                         <textarea
+                            onchange = {(e)=>setJobDescription(e.target.value)}
                             className="job-description-input"
                             name="jobDescription"
                             id="jobDescription"
@@ -213,7 +238,7 @@ const Home = () => {
                                 <span className="file-title">Click to upload or drag &amp; drop</span>
                                 <span className="file-sub">PDF or DOCX (Max 5MB)</span>
                             </label>
-                            <input hidden type='file' name='resume' id='resume' accept='.pdf,.doc,.docx' />
+                            <input ref={resumeInputRef} hidden type='file' name='resume' id='resume' accept='.pdf,.doc,.docx' />
                         </div>
 
                         <div className="divider"><span>OR</span></div>
@@ -221,6 +246,7 @@ const Home = () => {
                         <div className="input-group">
                             <label htmlFor='selfDescription'>Quick Self-Description</label>
                             <textarea
+                                onchange = {(e)=>setSelfDescription(e.target.value)}
                                 name="selfDescription"
                                 id="selfDescription"
                                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
@@ -236,7 +262,9 @@ const Home = () => {
 
                 <div className="interview-footer">
                     <span className="footer-note">AI-Powered Strategy Generation · Approx 30s</span>
-                    <button className='button primary-button' type="button">
+                    <button 
+                    onclick = {handleGenerateReport}
+                    className='button primary-button' type="button">
                         <span className="plus" aria-hidden="true">+</span>
                         Generate My Interview Strategy
                     </button>

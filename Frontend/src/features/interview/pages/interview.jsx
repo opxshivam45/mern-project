@@ -1,105 +1,107 @@
 import React, { useState } from 'react'
 import "../style/interview.scss"
+import { useInterview } from '../hooks/useInterview.js'
 
 // Sample data shaped like the API response — this will move to the
 // state/API layers later. Kept here for now so the UI layer has
 // something real to render.
-const report = {
-    matchScore: 88,
-    matchNote: "Strong match for this role",
-    technicalQuestions: [
-        {
-            question: "Explain the Node.js event loop and how it handles asynchronous I/O operations.",
-            intention: "To assess the candidate's deep understanding of Node.js internal architecture and non-blocking I/O.",
-            answer: "The candidate should explain the different phases of the event loop (timers, pending callbacks, idle/prepare, poll, check, close). They should mention how Libuv handles the thread pool and how the callback queue works with the call stack to ensure performance without blocking the main thread."
-        },
-        {
-            question: "How do you optimize a MongoDB aggregation pipeline for high-volume data?",
-            intention: "To test practical experience with database performance and the candidate's claim of reducing response times by 35%.",
-            answer: "Focus on using $match as early as possible to reduce the dataset, ensuring fields used in $match and $sort are indexed, and avoiding $unwind if possible as it inflates the document count. Mention the use of 'explain()' to analyze execution plans."
-        },
-        {
-            question: "Can you describe the Cache-Aside pattern and when you would use Redis in a Node.js application?",
-            intention: "To evaluate understanding of caching strategies and when they meaningfully improve performance.",
-            answer: "Explain that the application checks the cache first, and on a miss, reads from the database and populates the cache. Redis fits well for session storage, rate limiting, and frequently-read, rarely-changed data."
-        },
-        {
-            question: "What are the challenges of migrating a monolithic application to a modular service-based architecture?",
-            intention: "To gauge experience with large-scale system design and refactoring trade-offs.",
-            answer: "Discuss data consistency across services, network latency, distributed transactions, and the need for proper service boundaries. Mention strategies like the strangler-fig pattern for incremental migration."
-        }
-    ],
-    behavioralQuestions: [
-        {
-            question: "Describe a situation where you had a disagreement with a teammate during a project. How did you resolve it?",
-            intention: "To assess interpersonal skills, conflict resolution, and the ability to work in a collaborative environment.",
-            answer: "Use the STAR method. Mention your role as a team player, how you communicated clearly, listened to others' perspectives, and focused on the technical solution rather than personal differences."
-        },
-        {
-            question: "How do you stay updated with the latest trends in web development and AI?",
-            intention: "To evaluate the candidate's passion for technology and self-driven learning habits.",
-            answer: "Discuss your passion for solving real-world problems and mention a specific technology from the JD you've recently explored."
-        },
-        {
-            question: "Tell me about a challenging bug you encountered in your Personal Finance Tracker project and how you fixed it.",
-            intention: "To understand the candidate's logical approach to overcoming technical hurdles.",
-            answer: "Explain your process: understanding the problem, breaking it down, researching, and debugging systematically."
-        }
-    ],
-    skillGaps: [
-        "Message Queues (Kafka/RabbitMQ)",
-        "Advanced Docker & CI/CD Pipelines",
-        "Distributed Systems Design",
-        "Production-level Redis management"
-    ],
-    preparationPlan: [
-        {
-            day: 1,
-            focus: "Frontend Mastery (React.js)",
-            tasks: [
-                "Review React Hooks: useState, useEffect, and useContext.",
-                "Practice building a small responsive component using Flexbox/Grid.",
-                "Study Virtual DOM and React lifecycle methods."
-            ]
-        },
-        {
-            day: 2,
-            focus: "Backend & API Development",
-            tasks: [
-                "Build a basic Express.js server with RESTful routes.",
-                "Implement Middleware in Node.js.",
-                "Practice fetching data from a public API using Axios or Fetch."
-            ]
-        },
-        {
-            day: 3,
-            focus: "Database & Authentication",
-            tasks: [
-                "Set up a MongoDB Atlas cluster and connect it using Mongoose.",
-                "Implement JWT for user signup and login.",
-                "Review CRUD operations and MongoDB indexing."
-            ]
-        },
-        {
-            day: 4,
-            focus: "AI Integration & Tools",
-            tasks: [
-                "Research integrating the OpenAI API into a Node.js backend.",
-                "Review Git commands: branching, merging, and pull requests.",
-                "Practice Postman for API testing and documentation."
-            ]
-        },
-        {
-            day: 5,
-            focus: "Mock Interviews & Revision",
-            tasks: [
-                "Revise Core CS subjects: DBMS, OOP, and DSA.",
-                "Conduct a mock behavioral interview focused on your projects.",
-                "Refactor the finance tracker to use a real backend."
-            ]
-        }
-    ]
-}
+// const report = {
+//     matchScore: 88,
+//     matchNote: "Strong match for this role",
+//     technicalQuestions: [
+//         {
+//             question: "Explain the Node.js event loop and how it handles asynchronous I/O operations.",
+//             intention: "To assess the candidate's deep understanding of Node.js internal architecture and non-blocking I/O.",
+//             answer: "The candidate should explain the different phases of the event loop (timers, pending callbacks, idle/prepare, poll, check, close). They should mention how Libuv handles the thread pool and how the callback queue works with the call stack to ensure performance without blocking the main thread."
+//         },
+//         {
+//             question: "How do you optimize a MongoDB aggregation pipeline for high-volume data?",
+//             intention: "To test practical experience with database performance and the candidate's claim of reducing response times by 35%.",
+//             answer: "Focus on using $match as early as possible to reduce the dataset, ensuring fields used in $match and $sort are indexed, and avoiding $unwind if possible as it inflates the document count. Mention the use of 'explain()' to analyze execution plans."
+//         },
+//         {
+//             question: "Can you describe the Cache-Aside pattern and when you would use Redis in a Node.js application?",
+//             intention: "To evaluate understanding of caching strategies and when they meaningfully improve performance.",
+//             answer: "Explain that the application checks the cache first, and on a miss, reads from the database and populates the cache. Redis fits well for session storage, rate limiting, and frequently-read, rarely-changed data."
+//         },
+//         {
+//             question: "What are the challenges of migrating a monolithic application to a modular service-based architecture?",
+//             intention: "To gauge experience with large-scale system design and refactoring trade-offs.",
+//             answer: "Discuss data consistency across services, network latency, distributed transactions, and the need for proper service boundaries. Mention strategies like the strangler-fig pattern for incremental migration."
+//         }
+//     ],
+//     behavioralQuestions: [
+//         {
+//             question: "Describe a situation where you had a disagreement with a teammate during a project. How did you resolve it?",
+//             intention: "To assess interpersonal skills, conflict resolution, and the ability to work in a collaborative environment.",
+//             answer: "Use the STAR method. Mention your role as a team player, how you communicated clearly, listened to others' perspectives, and focused on the technical solution rather than personal differences."
+//         },
+//         {
+//             question: "How do you stay updated with the latest trends in web development and AI?",
+//             intention: "To evaluate the candidate's passion for technology and self-driven learning habits.",
+//             answer: "Discuss your passion for solving real-world problems and mention a specific technology from the JD you've recently explored."
+//         },
+//         {
+//             question: "Tell me about a challenging bug you encountered in your Personal Finance Tracker project and how you fixed it.",
+//             intention: "To understand the candidate's logical approach to overcoming technical hurdles.",
+//             answer: "Explain your process: understanding the problem, breaking it down, researching, and debugging systematically."
+//         }
+//     ],
+//     skillGaps: [
+//         "Message Queues (Kafka/RabbitMQ)",
+//         "Advanced Docker & CI/CD Pipelines",
+//         "Distributed Systems Design",
+//         "Production-level Redis management"
+//     ],
+//     preparationPlan: [
+//         {
+//             day: 1,
+//             focus: "Frontend Mastery (React.js)",
+//             tasks: [
+//                 "Review React Hooks: useState, useEffect, and useContext.",
+//                 "Practice building a small responsive component using Flexbox/Grid.",
+//                 "Study Virtual DOM and React lifecycle methods."
+//             ]
+//         },
+//         {
+//             day: 2,
+//             focus: "Backend & API Development",
+//             tasks: [
+//                 "Build a basic Express.js server with RESTful routes.",
+//                 "Implement Middleware in Node.js.",
+//                 "Practice fetching data from a public API using Axios or Fetch."
+//             ]
+//         },
+//         {
+//             day: 3,
+//             focus: "Database & Authentication",
+//             tasks: [
+//                 "Set up a MongoDB Atlas cluster and connect it using Mongoose.",
+//                 "Implement JWT for user signup and login.",
+//                 "Review CRUD operations and MongoDB indexing."
+//             ]
+//         },
+//         {
+//             day: 4,
+//             focus: "AI Integration & Tools",
+//             tasks: [
+//                 "Research integrating the OpenAI API into a Node.js backend.",
+//                 "Review Git commands: branching, merging, and pull requests.",
+//                 "Practice Postman for API testing and documentation."
+//             ]
+//         },
+//         {
+//             day: 5,
+//             focus: "Mock Interviews & Revision",
+//             tasks: [
+//                 "Revise Core CS subjects: DBMS, OOP, and DSA.",
+//                 "Conduct a mock behavioral interview focused on your projects.",
+//                 "Refactor the finance tracker to use a real backend."
+//             ]
+//         }
+//     ]
+// }
+
 
 const TABS = [
     {
@@ -167,8 +169,9 @@ const RoadMapCard = ({ plan }) => (
 const Interview = () => {
     // NOTE: this local tab state is a stand-in so the layout is
     // click-through-able now. It'll move into the hook layer
-    // (e.g. useInterviewReport) once that's built.
+    // (e.g. useInterviewreport) once that's built.
     const [activeTab, setActiveTab] = useState('technical')
+    const {report} = useInterview()
 
     const activeLabel = TABS.find(t => t.key === activeTab)?.label
 
