@@ -200,7 +200,7 @@ const Home = () => {
                         </div>
 
                         <textarea
-                            onchange = {(e)=>setJobDescription(e.target.value)}
+                            onChange = {(e)=>setJobDescription(e.target.value)}
                             className="job-description-input"
                             name="jobDescription"
                             id="jobDescription"
@@ -246,7 +246,7 @@ const Home = () => {
                         <div className="input-group">
                             <label htmlFor='selfDescription'>Quick Self-Description</label>
                             <textarea
-                                onchange = {(e)=>setSelfDescription(e.target.value)}
+                                onChange = {(e)=>setSelfDescription(e.target.value)}
                                 name="selfDescription"
                                 id="selfDescription"
                                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
@@ -263,7 +263,7 @@ const Home = () => {
                 <div className="interview-footer">
                     <span className="footer-note">AI-Powered Strategy Generation · Approx 30s</span>
                     <button 
-                    onclick = {handleGenerateReport}
+                    onClick = {handleGenerateReport}
                     className='button primary-button' type="button">
                         <span className="plus" aria-hidden="true">+</span>
                         Generate My Interview Strategy
