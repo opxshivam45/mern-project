@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import "../style/interview.scss"
 import { useInterview } from '../hooks/useInterview.js'
+import{useNavigate,useParams} from 'react-router'
 
 // Sample data shaped like the API response — this will move to the
 // state/API layers later. Kept here for now so the UI layer has
@@ -167,11 +168,28 @@ const RoadMapCard = ({ plan }) => (
 )
 
 const Interview = () => {
+    console.log("🔥 NEW INTERVIEW FILE IS RUNNING");
     // NOTE: this local tab state is a stand-in so the layout is
     // click-through-able now. It'll move into the hook layer
     // (e.g. useInterviewreport) once that's built.
     const [activeTab, setActiveTab] = useState('technical')
-    const {report} = useInterview()
+    const {report,getReportById,loading} = useInterview()
+    const {interviewId} = useParams()
+
+    useEffect(() => {
+        if (interviewId) {
+            getReportById(interviewId)
+        }
+    }, [interviewId]);
+
+    if (!report) {
+    return (
+        <main className="loading-screen">
+            <h2>Loading interview report...</h2>
+        </main>
+        )
+    }
+    console.log("REPORT =", report); 
 
     const activeLabel = TABS.find(t => t.key === activeTab)?.label
 
@@ -246,11 +264,18 @@ const Interview = () => {
                     <p className="score-note">{report.matchNote}</p>
 
                     <p className="sidebar-eyebrow sidebar-eyebrow-gap">Skill Gaps</p>
-                    <div className="skill-list">
+                    {/* <div className="skill-list">
                         {report.skillGaps.map((skill, i) => (
                             <div key={i} className="skill-card">{skill}</div>
                         ))}
-                    </div>
+                    </div> */}
+<div className="skill-list">
+    {report.skillGaps.map((skill, i) => (
+        <div key={i} className="skill-card">
+            {skill}
+        </div>
+    ))}
+</div>                                        
                 </aside>
             </div>
         </main>
