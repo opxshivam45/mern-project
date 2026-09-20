@@ -144,9 +144,14 @@ const Home = () => {
     const navigate = useNavigate()
 
     const handleGenerateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[ 0 ]
+    const resumeFile = resumeInputRef.current.files[0]
+    try {
         const data = await generateReport({ jobDescription, selfDescription, resumeFile })
         navigate(`/interview/${data._id}`)
+    } catch (error) {
+        console.log("Failed to generate report:", error)
+        // TODO: show this to the user (toast/error banner) instead of just logging
+    }
     }
 
     if (loading) {
